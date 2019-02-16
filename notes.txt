@@ -1,0 +1,42 @@
+I like this... It's fun!
+Copied from mike i guess...
+
+
+The order of operations should now be:
+    1. modeling operations (rotate, translate, scale as specified in the input file.)
+    2. interactive rotations
+        Grab normals here! World is now built. Now apply viewing transformations.
+    3. lookat (after this the camera is in its standard location)
+
+    4. projection matrix (trash coompactor)
+        Causes objects to shift, will mess up normals.
+    5. conversion to screen coordinates
+    6. creation of pixels (rasterization)
+    7. z-buffer testing
+
+Finding normals.
+
+As an anti-aliasing technique, use the method described in class. When the DIM command is processed, you
+should proceed with a width and height twice as big as specified by the command. Just before the image is
+displayed, reduce it to the originally specified dimensions by replacing every 2x2 pixel cluster with a single pixel.
+Each color component of the single pixel (R,G,or B) should be the average over the four pixels being replaced.
+To allow for simple shading, the input files now follow a rule for the order in which triangle vertices appear.
+When the triangle is looked at from its front, the order of the vertices is counter-clockwise. (See figure below.)
+Your renderer will have to follow this rule too when it creates triangles that are part of a solid cube. Because of
+this standard ordering, you can now calculate a normal for each triangle.
+
+The input file will specify a new command called LIGHT_DIRECTION, as in: LIGHT_DIRECTION 5.0 5.0 5.0
+This specifies a vector which points to the light source. Whenever you are ready to fill a triangle, you will have
+to calculate its color as the sum of two parts: ambient light and directed light, each accounting for half the final
+shade. The ambient light should simply use the color indicated in the input file. The directed light should use
+that color too, but multiply each component (R,G,B) by a shading factor. The shading factor should range from
+1 (when the triangle's surface is pointing directly at the light) to 0 (when the surface is parallel to the light or
+facing away). This shading factor can be computed by taking the dot product of the normalized light vector and
+the normalized triangle surface normal. The dot product gives the cosine formed by those two vectors. Be
+careful not to use negative cosine values. Those should be treated as 0. As an example, suppose the specified
+color of a triangle is R,G,B = 200,150,100 and that the triangle is pointing toward the light, but not directly. In
+that case, the red component might be 0.5 * 200 (for the ambient portion) + 0.5 * 0.84 * 200 (for the direct
+light). 0.84 is the shading factor and in this case is close to 1, indicating that the triangle is mostly facing the
+light. Because our lighting depends on surface normals, we will not be using lines (or wireframe cubes) in
+HW3. A line has no surface normal.
+Be careful
